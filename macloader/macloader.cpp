@@ -125,10 +125,22 @@ int main() {
         amode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
         ret = chmod(CID_PATH, amode);
 
-        char* chown_cmd = (char*) malloc(strlen("chown system ") + strlen(CID_PATH));
-        char* chgrp_cmd = (char*) malloc(strlen("chgrp system ") + strlen(CID_PATH));
-        sprintf(chown_cmd, "chown system %s", CID_PATH);
-        sprintf(chgrp_cmd, "chgrp system %s", CID_PATH);
+        const int chown_cmd_len = strlen("chown system ") + strlen(CID_PATH) + 1;
+        char* chown_cmd = (char*) malloc(chown_cmd_len);
+        if (!chown_cmd) {
+            ALOGE("out of memory!");
+            return -1;
+        }
+        snprintf(chown_cmd, chown_cmd_len, "chown system %s", CID_PATH);
+
+        const int chgrp_cmd_len = strlen("chgrp system ") + strlen(CID_PATH) + 1;
+        char* chgrp_cmd = (char*) malloc(chgrp_cmd_len);
+        if (!chgrp_cmd) {
+            ALOGE("out of memory!");
+            return -1;
+        }
+        snprintf(chgrp_cmd, chgrp_cmd_len, "chgrp system %s", CID_PATH);
+
         system(chown_cmd);
         system(chgrp_cmd);
 
